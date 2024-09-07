@@ -4,14 +4,16 @@ import { useTodo } from "../contexts";
 import { BsPencil } from "react-icons/bs";
 import { IoSaveOutline } from "react-icons/io5";
 import { MdDeleteOutline } from "react-icons/md";
+import TodoModal from "./TodoModal";
 
 const TodoItem = ({ todo }) => {
   const [isTodoEditable, setIsTodoEditable] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { toggleComplete, deleteTodo, updateTodo } = useTodo();
   const [todoMsg, setTodoMsg] = useState(todo.todo);
 
   const editedTodo = () => {
-    updateTodo(todo.id, { todo: todoMsg }); // Ensure only the updated todo field is passed
+    updateTodo(todo.id, { todo: todoMsg }); // Save the edited todo
     setIsTodoEditable(false);
   };
 
@@ -19,10 +21,14 @@ const TodoItem = ({ todo }) => {
     toggleComplete(todo.id);
   };
 
+  const handleSave = (updatedTodo) => {
+    updateTodo(todo.id, updatedTodo); // Save changes from modal
+  };
+
   return (
     <div
-      className={`flex border border-black/10 rounded-lg px-3 py-1.5 gap-x-3 shadow-sm shadow-white/50 duration-300 text-black ${
-        todo.completed ? "bg-violet-100" : "bg-white"
+      className={`flex border border-black/10 rounded-lg px-3 py-1.5 gap-x-3 shadow-sm shadow-white/50 duration-300 text-bg3  ${
+        todo.completed ? "bg-dark-btn" : "bg-bg2"
       }`}
     >
       <input
@@ -43,28 +49,36 @@ const TodoItem = ({ todo }) => {
         aria-label={`Edit todo item ${todo.todo}`}
       />
       <button
-        className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0 disabled:opacity-50"
+        className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-dark-btn hover:bg-bg1 shrink-0 disabled:opacity-50"
         onClick={() => {
           if (todo.completed) return;
 
           if (isTodoEditable) {
             editedTodo(); // Save changes if editable
           } else {
-            setIsTodoEditable((prev) => !prev); // Toggle edit mode
+            setIsModalOpen(true); // Open modal for more complex edits
           }
         }}
         disabled={todo.completed}
         aria-label={isTodoEditable ? 'Save changes' : 'Edit todo'}
       >
-        {isTodoEditable ? <IoSaveOutline style={{ fontSize: '16px' }} />: <BsPencil style={{ fontSize: '16px' }} />}
+        {isTodoEditable ? <IoSaveOutline style={{ fontSize: '16px' }} /> : <BsPencil style={{ fontSize: '16px' }} />}
       </button>
       <button
-        className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0"
+        className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-dark-btn hover:bg-bg1 shrink-0"
         onClick={() => deleteTodo(todo.id)}
         aria-label={`Delete ${todo.todo}`}
       >
         <MdDeleteOutline style={{ fontSize: '19px' }} />
       </button>
+
+      {/* Modal for editing */}
+      <TodoModal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        todo={todo}
+        onSave={handleSave}
+      />
     </div>
   );
 };
