@@ -46,7 +46,7 @@ const TodoModal = ({ isOpen, onRequestClose, todo, onSave }) => {
       </div>
 
       <div className="mb-4">
-        <label className="block text-bg3 mb-2">Todo Text -</label>{" "}
+{/*         <label className="block text-bg3 mb-2">Todo Text -</label>{" "} */}
         {/* Custom label color */}
         <textarea
           name="todo"
