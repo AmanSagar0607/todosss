@@ -207,7 +207,7 @@ function App() {
               <FaGithub size={24} />
             </a>
             <a
-              href="https://www.linkedin.com/home"
+              href="https://www.linkedin.com/in/amansagar0607"
               target="_blank"
               rel="noopener noreferrer"
             >
